@@ -7,12 +7,17 @@ export async function POST(req: Request) {
     const { prompt, size } = await req.json();
     const [width, height] = size.split('x').map(Number);
 
+    const apiKey = process.env.STABILITY_API_KEY;
+    if (!apiKey) {
+      throw new Error('STABILITY_API_KEY is not set');
+    }
+
     const formData = new FormData();
     formData.append('text_prompts[0][text]', prompt);
-    formData.append('width', width);
-    formData.append('height', height);
-    formData.append('steps', 30);
-    formData.append('cfg_scale', 7);
+    formData.append('width', width.toString());
+    formData.append('height', height.toString());
+    formData.append('steps', '30');
+    formData.append('cfg_scale', '7');
 
     const response = await axios.post(
       'https://api.stability.ai/v1/generation/stable-diffusion-xl-1024-v1-0/text-to-image',
@@ -21,7 +26,7 @@ export async function POST(req: Request) {
         headers: {
           ...formData.getHeaders(),
           Accept: 'application/json',
-          Authorization: `Bearer ${process.env.STABILITY_API_KEY}`,
+          Authorization: `Bearer ${apiKey}`,
         },
         responseType: 'arraybuffer',
       }
@@ -32,10 +37,10 @@ export async function POST(req: Request) {
         'Content-Type': 'image/png',
       },
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error:', error);
-    return new NextResponse(JSON.stringify({ error: 'Internal Server Error' }), {
-      status: 500,
+    return new NextResponse(JSON.stringify({ error: error.message || 'Internal Server Error' }), {
+      status: error.response?.status || 500,
       headers: {
         'Content-Type': 'application/json',
       },
