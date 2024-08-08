@@ -4,9 +4,9 @@ import React, { useState } from 'react'
 import Image from 'next/image'
 
 const styles: Record<string, string> = {
-  anime: "高品质动漫风格,细腻的线条,鲜艳的色彩,",
-  realistic: "超写实风格,细致的纹理,自然的光影,",
-  pixel: "像素艺术风格,复古游戏感,清晰的像素块,",
+  anime: "anime style, vibrant colors, 2D animation, kawaii characters,",
+  realistic: "hyper-realistic style, detailed textures, natural lighting,",
+  pixel: "pixel art style, 8-bit graphics, retro gaming aesthetic,",
 }
 
 export default function Home() {
@@ -33,6 +33,7 @@ export default function Home() {
         body: JSON.stringify({
           prompt: `${styles[style]}${prompt}`,
           size,
+          style,
         }),
       })
 
@@ -94,8 +95,8 @@ export default function Home() {
             className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-600"
           >
             <option value="">选择分辨率</option>
-            <option value="512x512" className="text-gray-600">512x512</option>
-            <option value="768x768" className="text-gray-600">768x768</option>
+            <option value="1152x896" className="text-gray-600">1152x896</option>
+            <option value="1344x768" className="text-gray-600">1344x768</option>
             <option value="1024x1024" className="text-gray-600">1024x1024</option>
           </select>
         </div>
