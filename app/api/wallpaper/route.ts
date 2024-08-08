@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 import axios from 'axios';
-import FormData from 'form-data';
 
 export async function POST(req: Request) {
   try {
@@ -9,23 +8,23 @@ export async function POST(req: Request) {
 
     const apiKey = process.env.STABILITY_API_KEY;
     if (!apiKey) {
-      throw new Error('STABILITY_API_KEY is not set');
+      throw new Error('STABILITY_API_KEY 未设置');
     }
-
-    const formData = new FormData();
-    formData.append('text_prompts[0][text]', prompt);
-    formData.append('width', width.toString());
-    formData.append('height', height.toString());
-    formData.append('steps', '30');
-    formData.append('cfg_scale', '7');
 
     const response = await axios.post(
       'https://api.stability.ai/v1/generation/stable-diffusion-xl-1024-v1-0/text-to-image',
-      formData,
+      {
+        text_prompts: [{ text: prompt }],
+        cfg_scale: 7,
+        height: height,
+        width: width,
+        steps: 30,
+        samples: 1,
+      },
       {
         headers: {
-          ...formData.getHeaders(),
-          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Accept: 'image/png',
           Authorization: `Bearer ${apiKey}`,
         },
         responseType: 'arraybuffer',
@@ -38,8 +37,8 @@ export async function POST(req: Request) {
       },
     });
   } catch (error: any) {
-    console.error('Error:', error);
-    let errorMessage = 'Internal Server Error';
+    console.error('错误:', error);
+    let errorMessage = '内部服务器错误';
     let statusCode = 500;
 
     if (axios.isAxiosError(error)) {

@@ -38,7 +38,8 @@ export default function Home() {
 
       if (response.ok) {
         const blob = await response.blob()
-        setImage(URL.createObjectURL(blob))
+        const imageUrl = URL.createObjectURL(blob)
+        setImage(imageUrl)
       } else {
         const errorData = await response.json()
         setError(`生成壁纸时出错: ${errorData.error}`)
@@ -113,10 +114,10 @@ export default function Home() {
         
         {image && (
           <div className="mt-6">
-            <Image src={image} alt="生成的壁纸" width={512} height={512} className="rounded-lg" />
+            <img src={image} alt="生成的壁纸" className="rounded-lg max-w-full h-auto" />
             <a
               href={image}
-              download="ai-wallpaper.jpg"
+              download="ai-wallpaper.png"
               className="mt-4 inline-block bg-gray-200 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-300 transition-colors"
             >
               下载
