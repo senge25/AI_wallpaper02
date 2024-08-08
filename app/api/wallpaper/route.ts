@@ -39,8 +39,18 @@ export async function POST(req: Request) {
     });
   } catch (error: any) {
     console.error('Error:', error);
-    return new NextResponse(JSON.stringify({ error: error.message || 'Internal Server Error' }), {
-      status: error.response?.status || 500,
+    let errorMessage = 'Internal Server Error';
+    let statusCode = 500;
+
+    if (axios.isAxiosError(error)) {
+      errorMessage = error.response?.data?.message || error.message;
+      statusCode = error.response?.status || 500;
+    } else if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+
+    return new NextResponse(JSON.stringify({ error: errorMessage }), {
+      status: statusCode,
       headers: {
         'Content-Type': 'application/json',
       },
