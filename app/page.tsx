@@ -56,7 +56,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-300 to-purple-300 flex items-center justify-center p-4">
       <div className="bg-white rounded-3xl shadow-xl p-8 max-w-2xl w-full">
-        <h1 className="text-3xl font-bold mb-2">AI 壁纸生成器</h1>
+        <h1 className="text-gray-600">AI 壁纸生成器</h1>
         <p className="text-gray-600 mb-6">使用您自己的文本或主题创建个性化壁纸。</p>
         
         <div className="mb-6">
